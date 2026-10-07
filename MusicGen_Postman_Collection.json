@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+		"name": "MusicGen Local API",
+		"description": "Colección para consumir la API local de generación de música con MusicGen.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generar Melodía (API Rest Limpia)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"model\": \"facebook/musicgen-melody\",\r\n  \"prompt\": \"A synthwave track with a driving bassline and futuristic melodies, 80s retro style\",\r\n  \"duration\": 10\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"generate"
+					]
+				},
+				"description": "Llama al endpoint nativo de FastAPI para generar música. Devuelve directamente el archivo binario `.wav` para que lo escuches."
+			},
+			"response": []
+		}
+	]
+}

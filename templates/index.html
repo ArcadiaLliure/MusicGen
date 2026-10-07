@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcàdia Lliure Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .inst-btn { transition: all 0.2s; width: 90px; height: 90px; margin: 4px; border-radius: 12px; border: 2px solid transparent; font-weight: 500; font-size: 0.9rem;}
+        .inst-state-0 { background-color: #e9ecef; color: #6c757d; border-color: #dee2e6; }
+        .inst-state-0:hover { background-color: #d3d7db; color: #495057; border-color: #c0c4c8; }
+        .inst-state-1 { background-color: #198754; color: white; border-color: #146c43; }
+        .inst-state-1:hover { background-color: #157347; color: white; }
+        .inst-state-2 { background-color: #0d6efd; color: white; border-color: #0a58ca; }
+        .inst-state-2:hover { background-color: #0b5ed7; color: white; }
+        .inst-state-3 { background-color: #dc3545; color: white; border-color: #b02a37; }
+        .inst-state-3:hover { background-color: #bb2d3b; color: white; }
+        .mini-inst-btn { width: 50px; height: 50px; margin: 2px; padding: 0; font-size: 1.2rem; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; border: 2px solid transparent; transition: all 0.2s; cursor: pointer; }
+        .mini-inst-btn .inst-name { display: none; }
+        
+        .inst-state-1 .inst-svg, .inst-state-2 .inst-svg, .inst-state-3 .inst-svg,
+        .mini-inst-btn:not(.inst-state-0) .inst-svg { filter: brightness(0) invert(1); }
+
+        .nav-tabs .nav-link { cursor: pointer; }
+        .track-block { transition: all 0.3s; }
+        .cover-box {
+            aspect-ratio: 1; background-color: #e9ecef; border: 2px dashed #ced4da; border-radius: 12px;
+            position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: all 0.3s;
+        }
+        .cover-box:hover { border-color: #6c757d; }
+        .cover-media { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        .cover-ui { z-index: 2; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 8px; text-align: center; width: 90%; }
+        .cover-box.has-media .cover-ui { opacity: 0; transition: opacity 0.3s; }
+        .cover-box.has-media:hover .cover-ui { opacity: 1; }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <h1 class="mb-4 text-center text-primary"><i class="bi bi-boombox"></i> Arcàdia Lliure Studio</h1>
+    <ul class="nav nav-tabs mb-4" id="appTabs">
+        <li class="nav-item"><a class="nav-link active" id="tab-gen" onclick="switchTab('gen')">Generador</a></li>
+        <li class="nav-item"><a class="nav-link" id="tab-lib" onclick="switchTab('lib')">Biblioteca</a></li>
+    </ul>
+
+    <div class="row">
+        <!-- Generador -->
+        <div id="view-gen" class="col-12 row m-0 p-0">
+            <div class="col-md-8 mb-4">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                        <h5 class="card-title mb-0"><i class="bi bi-music-player"></i> Reproductor / Productor</h5>
+                        <div class="form-check form-switch fs-5 mb-0">
+                            <input class="form-check-input" type="checkbox" id="modeAlbumToggle" onchange="toggleAlbumMode()">
+                            <label class="form-check-label text-white" for="modeAlbumToggle">Mode Àlbum</label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-sm-7 col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary fs-5" id="titleLabel">Títol cançó</label>
+                                    <input type="text" class="form-control form-control-lg fw-bold" id="title" placeholder="Escriu el títol..." required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Artista</label>
+                                    <input type="text" class="form-control" id="artist" placeholder="El teu nom..." value="AI Producer">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="model" class="form-label fw-bold">Model IA Musicial</label>
+                                    <select class="form-select" id="model">
+                                        <option value="facebook/musicgen-small">MusicGen Small (Ràpid, 300M)</option>
+                                        <option value="facebook/musicgen-medium">MusicGen Medium (1.5B)</option>
+                                        <option value="facebook/musicgen-large">MusicGen Large (3.3B)</option>
+                                        <option value="facebook/musicgen-melody" selected>MusicGen Melody (Àlbum compatible, 1.5B)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Cover Art -->
+                            <div class="col-sm-5 col-md-4">
+                                <label class="form-label fw-bold">Caràtula / Vídeo Loop</label>
+                                <div id="coverBox" class="cover-box shadow-sm">
+                                    <img id="coverImgPreview" class="cover-media d-none" src="">
+                                    <video id="coverVidPreview" class="cover-media d-none" src="" autoplay loop muted></video>
+                                    <div class="cover-ui shadow-sm">
+                                        <i class="bi bi-image text-secondary mb-2 d-block" style="font-size: 2.5rem;"></i>
+                                        <button class="btn btn-sm btn-outline-secondary w-100 mb-2 fw-bold" onclick="document.getElementById('coverInput').click()"><i class="bi bi-upload"></i> Pujar arxiu</button>
+                                        
+                                        <!-- Selector ComfyUI Models -->
+                                        <div class="input-group input-group-sm mb-2">
+                                            <select id="comfyModelSelect" class="form-select text-center" style="font-size: 0.8rem;" onchange="updateDeleteBtn()">
+                                                <option value="">Carregant models...</option>
+                                            </select>
+                                            <button class="btn btn-outline-danger d-none" id="btnDeleteModel" type="button" onclick="deleteComfyModel()" title="Esborrar model (Alliberar espai)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="progress d-none mb-2" id="downloadProgressBox" style="height: 10px;">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" id="downloadProgressBar" style="width: 0%"></div>
+                                        </div>
+                                        
+                                        <input type="text" id="coverPrompt" class="form-control form-control-sm mb-2" placeholder="Prompt caràtula (opcional)..." style="font-size: 0.8rem;">
+                                        
+                                        <button class="btn btn-sm btn-warning w-100 fw-bold" id="btnComfyUI" onclick="generateCoverComfyUI()"><i class="bi bi-stars"></i> Generar amb IA</button>
+                                    </div>
+                                    <input type="file" id="coverInput" class="d-none" accept="image/*,video/*,.gif" onchange="uploadCover(this)">
+                                    <input type="hidden" id="currentCoverPath">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Album Config -->
+                        <div id="albumControls" class="mb-4 d-none p-4 bg-light border rounded border-primary shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label fw-bold text-primary mb-0 fs-5"><i class="bi bi-journal-album"></i> Configuració de l'Àlbum</label>
+                                <button type="button" class="btn btn-primary fw-bold shadow-sm" onclick="addNewTrack()"><i class="bi bi-plus-lg"></i> Afegir Pista</button>
+                            </div>
+                            <small class="text-muted d-block mb-3">Cada pista s'encadenarà musicalment amb l'anterior (model Melody requerit).</small>
+                            <label class="form-label fw-bold">Prompt comú per a tot l'àlbum</label>
+                            <textarea class="form-control mb-3 shadow-sm" id="albumPrompt" rows="2" placeholder="Ex: A cinematic orchestral soundtrack..." onchange="updatePromptsFromWizard()"></textarea>
+                            <div class="form-check form-switch fs-6 mb-2">
+                                <input class="form-check-input" type="checkbox" id="sameInstruments" checked onchange="toggleWizards()">
+                                <label class="form-check-label fw-bold" for="sameInstruments">Mateixos instruments en tot l'àlbum</label>
+                            </div>
+                        </div>
+
+                        <!-- Global Wizard -->
+                        <div id="globalWizardContainer" class="mb-4 border p-3 rounded bg-light shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label fw-bold mb-0 text-secondary"><i class="bi bi-magic"></i> Wizard d'Instruments</label>
+                                <div>
+                                    <span class="badge bg-success shadow-sm">Obligatori</span>
+                                    <span class="badge bg-primary shadow-sm">Opcional</span>
+                                    <span class="badge bg-danger shadow-sm">Prohibit</span>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap justify-content-center" id="instrumentGrid"></div>
+                        </div>
+
+                        <h5 class="fw-bold mt-4 mb-3 border-bottom pb-2 text-primary"><i class="bi bi-music-note-list"></i> Pistes Musicals</h5>
+                        <div id="promptsContainer"></div>
+                        
+                        <div class="form-check mb-4 mt-3">
+                            <input class="form-check-input" type="checkbox" id="notifySound" checked>
+                            <label class="form-check-label text-muted" for="notifySound">Avisar amb so al finalitzar cada pista</label>
+                        </div>
+
+                        <button class="btn btn-primary w-100 py-3 fs-4 fw-bold shadow" onclick="submitJob()" id="submitBtn">
+                            <i class="bi bi-play-circle-fill"></i> PRODUIR ARA
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cola -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+                        <h5 class="card-title mb-0"><i class="bi bi-list-task"></i> Cua de Treball</h5>
+                        <div class="spinner-border spinner-border-sm text-light d-none" id="queueSpinner"></div>
+                    </div>
+                    <div class="card-body p-0 bg-light" style="max-height: 800px; overflow-y: auto;">
+                        <ul class="list-group list-group-flush" id="queueList">
+                            <li class="list-group-item text-center text-muted p-5 bg-transparent border-0"><i class="bi bi-check-circle text-success fs-1 d-block mb-2"></i> Cua buida. Llest!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biblioteca -->
+        <div id="view-lib" class="col-12 d-none">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-secondary text-white d-flex justify-content-between py-3 align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-collection-play"></i> Biblioteca Musical</h5>
+                    <button class="btn btn-sm btn-light fw-bold shadow-sm" onclick="loadLibrary()"><i class="bi bi-arrow-clockwise"></i> Refrescar</button>
+                </div>
+                <div class="card-body bg-light" id="libraryContainer">Carregant...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playDing() {
+    if(!document.getElementById('notifySound').checked) return;
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
+    gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+    osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+}
+
+// --- COMFYUI MODELS MANAGEMENT ---
+let comfyModelsCache = [];
+
+async function loadComfyModels() {
+    try {
+        const res = await fetch('/api/comfyui/models');
+        const data = await res.json();
+        comfyModelsCache = data.models;
+        const sel = document.getElementById('comfyModelSelect');
+        sel.innerHTML = '';
+        data.models.forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = m.filename;
+            opt.innerText = `${m.name} ${m.downloaded ? '✅' : '❌'}`;
+            sel.appendChild(opt);
+        });
+        updateDeleteBtn();
+        
+        // Check progress
+        if(data.download_status.status === 'downloading') {
+            document.getElementById('downloadProgressBox').classList.remove('d-none');
+            document.getElementById('downloadProgressBar').style.width = data.download_status.progress + '%';
+            document.getElementById('btnComfyUI').disabled = true;
+            document.getElementById('btnDeleteModel').disabled = true;
+            setTimeout(loadComfyModels, 1000);
+        } else {
+            document.getElementById('downloadProgressBox').classList.add('d-none');
+            document.getElementById('btnComfyUI').disabled = false;
+            document.getElementById('btnDeleteModel').disabled = false;
+        }
+    } catch(e) {
+        document.getElementById('comfyModelSelect').innerHTML = '<option>Error connectant...</option>';
+    }
+}
+
+function updateDeleteBtn() {
+    const filename = document.getElementById('comfyModelSelect').value;
+    const modelObj = comfyModelsCache.find(m => m.filename === filename);
+    const btn = document.getElementById('btnDeleteModel');
+    if(modelObj && modelObj.downloaded) {
+        btn.classList.remove('d-none');
+    } else {
+        btn.classList.add('d-none');
+    }
+}
+
+async function deleteComfyModel() {
+    const filename = document.getElementById('comfyModelSelect').value;
+    const modelObj = comfyModelsCache.find(m => m.filename === filename);
+    if(modelObj && modelObj.downloaded) {
+        if(confirm(`Estàs segur que vols esborrar el model ${modelObj.name}? Pots tornar a descarregar-lo més tard.`)) {
+            document.getElementById('btnDeleteModel').disabled = true;
+            await fetch('/api/comfyui/delete', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({filename: filename})
+            });
+            loadComfyModels();
+        }
+    }
+}
+
+async function uploadCover(input) {
+    if(!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    const formData = new FormData(); formData.append('file', file);
+    try {
+        const res = await fetch('/api/upload_cover', { method: 'POST', body: formData });
+        const data = await res.json();
+        if(data.success) {
+            setCoverPreview(data.url, file.type.startsWith('video/'));
+            document.getElementById('currentCoverPath').value = data.cover_path;
+        }
+    } catch (e) { alert("Error uploading: " + e); }
+}
+
+async function generateCoverComfyUI() {
+    const filename = document.getElementById('comfyModelSelect').value;
+    const modelObj = comfyModelsCache.find(m => m.filename === filename);
+    
+    if(modelObj && !modelObj.downloaded) {
+        if(confirm(`El model ${modelObj.name} no està descarregat. Vols que el descarregui ara automàticament? (Ocupa varis GBs)`)) {
+            await fetch('/api/comfyui/download', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({filename: filename})
+            });
+            loadComfyModels();
+        }
+        return;
+    }
+
+    let prompt = document.getElementById('coverPrompt').value.trim();
+    if(!prompt) {
+        prompt = document.getElementById('albumPrompt').value;
+        if(!prompt) {
+            const firstBlock = document.getElementById('promptsContainer').children[0];
+            if(firstBlock) prompt = firstBlock.querySelector('.prompt-input').value;
+        }
+    }
+    
+    const btn = document.getElementById('btnComfyUI');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generant...';
+    btn.disabled = true;
+    
+    try {
+        const res = await fetch('/api/comfyui', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ prompt: prompt || 'abstract music concept', model: filename })
+        });
+        const data = await res.json();
+        if(data.success) {
+            setCoverPreview(data.url, false);
+            document.getElementById('currentCoverPath').value = data.cover_path;
+        } else {
+            alert("ComfyUI Error: " + data.error);
+        }
+    } catch (e) {
+        alert("Error connectant amb ComfyUI: " + e);
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+
+function setCoverPreview(url, isVideo) {
+    const box = document.getElementById('coverBox');
+    const img = document.getElementById('coverImgPreview');
+    const vid = document.getElementById('coverVidPreview');
+    box.classList.add('has-media');
+    if(isVideo) {
+        img.classList.add('d-none'); vid.classList.remove('d-none'); vid.src = url;
+    } else {
+        vid.classList.add('d-none'); img.classList.remove('d-none'); img.src = url;
+    }
+}
+
+function switchTab(tab) {
+    document.getElementById('tab-gen').classList.remove('active');
+    document.getElementById('tab-lib').classList.remove('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    document.getElementById('view-gen').classList.add('d-none');
+    document.getElementById('view-lib').classList.add('d-none');
+    document.getElementById(`view-${tab}`).classList.remove('d-none');
+    if (tab === 'lib') loadLibrary();
+}
+
+const instruments = [
+    {id: "Piano", icon: "mdi:piano", color: "black", style: ""},
+    {id: "Clavicord", icon: "mdi:piano", color: "%238B4513", style: "transform: scaleX(-1);"}, // SaddleBrown
+    {id: "Synth", icon: "game-icons:piano-keys", color: "%239400D3", style: ""}, // DarkViolet
+    {id: "Acoustic Guitar", icon: "mdi:guitar-acoustic", color: "%23D2691E", style: ""}, // Chocolate
+    {id: "Spanish Guitar", icon: "mdi:guitar-acoustic", color: "%238B0000", style: "transform: rotate(15deg);"}, // DarkRed
+    {id: "Elec Guitar", icon: "mdi:guitar-electric", color: "%231E90FF", style: ""}, // DodgerBlue
+    {id: "Bass", icon: "mdi:guitar-electric", color: "%2332CD32", style: "transform: scale(1.1) rotate(-10deg);"}, // LimeGreen
+    {id: "Ukulele", icon: "qlementine-icons:ukulele-24", color: "%23DEB887", style: ""}, // BurlyWood
+    {id: "Harp", icon: "game-icons:harp", color: "%23DAA520", style: ""}, // GoldenRod
+    {id: "Contrabass", icon: "qlementine-icons:cello-24", color: "%235C4033", style: "transform: scale(1.3);"}, // DarkBrown
+    {id: "Cello", icon: "qlementine-icons:cello-24", color: "%238B4513", style: ""}, // SaddleBrown
+    {id: "Violin", icon: "mdi:violin", color: "%23A0522D", style: ""}, // Sienna
+    {id: "Flute", icon: "game-icons:flute", color: "%23708090", style: ""}, // SlateGray/Silver
+    {id: "Clarinet", icon: "game-icons:clarinet", color: "black", style: ""},
+    {id: "Oboe", icon: "game-icons:clarinet", color: "%232F4F4F", style: "transform: scaleY(-1);"}, // DarkSlateGray
+    {id: "Fagot", icon: "game-icons:bassoon", color: "%238B4513", style: ""}, // SaddleBrown
+    {id: "Gralla", icon: "game-icons:clarinet", color: "%23CD853F", style: ""}, // Peru
+    {id: "Saxophone", icon: "mdi:saxophone", color: "%23DAA520", style: ""}, // GoldenRod
+    {id: "Trumpet", icon: "mdi:trumpet", color: "%23FFA500", style: ""}, // Orange
+    {id: "Trombone", icon: "game-icons:trombone", color: "%23DAA520", style: ""}, // GoldenRod
+    {id: "Harmonica", icon: "qlementine-icons:harmonica-16", color: "%234682B4", style: "transform: scale(1.3);"}, // SteelBlue
+    {id: "Drums", icon: "lucide:drum", color: "%23FF4500", style: ""}, // OrangeRed
+    {id: "Choir", icon: "lucide:mic", color: "black", style: ""}
+];
+let globalInstStates = {}; 
+
+function initWizard() {
+    const grid = document.getElementById('instrumentGrid');
+    grid.innerHTML = '';
+    instruments.forEach(inst => {
+        globalInstStates[inst.id] = 0;
+        const btn = document.createElement('button');
+        btn.className = `btn inst-state-0 inst-btn d-flex flex-column align-items-center justify-content-center shadow-sm`;
+        btn.innerHTML = `<img src="https://api.iconify.design/${inst.icon}.svg?color=${inst.color}" width="40" height="40" class="mb-1 inst-svg" style="${inst.style}"><span class="inst-name">${inst.id}</span>`;
+        btn.onclick = (e) => { e.preventDefault(); globalInstStates[inst.id] = (globalInstStates[inst.id] + 1) % 4; btn.className = `btn inst-state-${globalInstStates[inst.id]} inst-btn d-flex flex-column align-items-center justify-content-center shadow-sm`; updatePromptsFromWizard(); };
+        grid.appendChild(btn);
+    });
+    initInitialTrack();
+}
+
+function generateWizardPrefix(statesDict) {
+    let req = [], opt = [], forbid = [];
+    for(let k in statesDict) { if(statesDict[k] === 1) req.push(k); if(statesDict[k] === 2) opt.push(k); if(statesDict[k] === 3) forbid.push(k); }
+    let prefix = "";
+    if(req.length > 0) prefix += `Instrumentation: ${req.join(', ')}. `;
+    if(opt.length > 0) prefix += `Optional instruments: ${opt.join(', ')}. `;
+    if(forbid.length > 0) prefix += `NO ${forbid.join(', NO ')}. `;
+    return prefix;
+}
+
+function updatePromptsFromWizard() {
+    const isGlobalWizard = !isAlbumMode || document.getElementById('sameInstruments').checked;
+    const globalPrefix = isGlobalWizard ? generateWizardPrefix(globalInstStates) : "";
+    const albumPrompt = isAlbumMode ? document.getElementById('albumPrompt').value.trim() : "";
+    const blocks = document.getElementById('promptsContainer').children;
+    for(let i=0; i<blocks.length; i++) {
+        const textarea = blocks[i].querySelector('.prompt-input');
+        let localPrefix = "";
+        if(!isGlobalWizard) {
+            const localStates = {};
+            blocks[i].querySelectorAll('.mini-inst-btn').forEach(b => { localStates[b.dataset.inst] = parseInt(b.dataset.state); });
+            localPrefix = generateWizardPrefix(localStates);
+        }
+        let current = textarea.dataset.userText || textarea.value; 
+        if(current.includes("Instrumentation:") || current.includes("Optional") || current.includes("NO ")) {
+            current = current.replace(/Instrumentation:.*?\.\s*/g, '').replace(/Optional instruments:.*?\.\s*/g, '').replace(/NO .*?\.\s*/g, '');
+        }
+        textarea.dataset.userText = current;
+        let fullText = (albumPrompt ? albumPrompt + ". " : "") + (isGlobalWizard ? globalPrefix : localPrefix);
+        textarea.value = fullText + current;
+    }
+}
+
+function getMiniWizardHTML(trackIndex) {
+    let html = `<div class="mini-wizard-container d-flex flex-wrap mt-2 p-2 bg-white border rounded shadow-sm ${(!isAlbumMode || document.getElementById('sameInstruments').checked) ? 'd-none' : ''}">`;
+    instruments.forEach(inst => { html += `<button type="button" class="mini-inst-btn inst-state-0" data-inst="${inst.id}" data-state="0" onclick="cycleMiniWizard(this)" title="${inst.id}"><img src="https://api.iconify.design/${inst.icon}.svg?color=${inst.color}" class="inst-svg" width="32" height="32" style="${inst.style}"></button>`; });
+    return html + `</div>`;
+}
+
+function cycleMiniWizard(btn) {
+    let s = (parseInt(btn.dataset.state) + 1) % 4;
+    btn.dataset.state = s; btn.className = `mini-inst-btn inst-state-${s}`;
+    updatePromptsFromWizard();
+}
+
+let isAlbumMode = false;
+function toggleAlbumMode() {
+    isAlbumMode = document.getElementById('modeAlbumToggle').checked;
+    const ctrl = document.getElementById('albumControls');
+    const container = document.getElementById('promptsContainer');
+    const label = document.getElementById('titleLabel');
+    if(isAlbumMode) {
+        label.innerText = "Títol àlbum"; ctrl.classList.remove('d-none');
+        document.getElementById('model').value = 'facebook/musicgen-melody';
+        const firstBlock = container.children[0];
+        if(firstBlock && !firstBlock.querySelector('.track-title')) {
+            const titleInput = document.createElement('input'); titleInput.type = "text"; titleInput.className = "form-control mb-2 track-title shadow-sm"; titleInput.placeholder = "Títol de la pista 1..."; titleInput.required = true;
+            firstBlock.insertBefore(titleInput, firstBlock.querySelector('.prompt-input'));
+        }
+    } else {
+        label.innerText = "Títol cançó"; ctrl.classList.add('d-none');
+        while (container.children.length > 1) { container.removeChild(container.lastChild); }
+        const firstBlock = container.children[0];
+        if(firstBlock) { const titleInput = firstBlock.querySelector('.track-title'); if(titleInput) titleInput.remove(); }
+    }
+    toggleWizards();
+}
+
+function toggleWizards() {
+    const isGlobal = !isAlbumMode || document.getElementById('sameInstruments').checked;
+    document.getElementById('globalWizardContainer').classList.toggle('d-none', !isGlobal);
+    document.querySelectorAll('.mini-wizard-container').forEach(w => w.classList.toggle('d-none', isGlobal));
+    updatePromptsFromWizard();
+}
+
+function initInitialTrack() {
+    const container = document.getElementById('promptsContainer');
+    container.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = "mb-4 border-start border-4 border-primary ps-3 position-relative track-block bg-white p-3 rounded shadow-sm";
+    div.innerHTML = `<h6 class="track-label fw-bold text-secondary">Pista 1</h6><textarea class="form-control prompt-input mb-2 shadow-sm" rows="2" placeholder="Descripció de l'estil/emoció de la pista..." oninput="this.dataset.userText = this.value"></textarea><div class="input-group input-group-sm mb-2" style="max-width: 200px;"><span class="input-group-text bg-light fw-bold">Duració (s)</span><input type="number" class="form-control track-duration" value="30" min="1"></div>${getMiniWizardHTML(0)}`;
+    container.appendChild(div);
+}
+
+function addNewTrack() {
+    const container = document.getElementById('promptsContainer');
+    const index = container.children.length;
+    const div = document.createElement('div');
+    div.className = "mb-4 border-start border-4 border-primary ps-3 position-relative track-block mt-3 bg-white p-3 rounded shadow-sm";
+    div.innerHTML = `<button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 mt-2 me-2" onclick="this.parentElement.remove(); updateTrackLabels(); updatePromptsFromWizard();"><i class="bi bi-x-lg"></i></button><h6 class="track-label fw-bold text-secondary">Pista ${index+1}</h6><input type="text" class="form-control mb-2 track-title shadow-sm" placeholder="Títol de la pista..." required><textarea class="form-control prompt-input mb-2 shadow-sm" rows="2" placeholder="Descripció de l'estil/emoció de la pista..." oninput="this.dataset.userText = this.value"></textarea><div class="input-group input-group-sm mb-2" style="max-width: 200px;"><span class="input-group-text bg-light fw-bold">Duració (s)</span><input type="number" class="form-control track-duration" value="30" min="1"></div>${getMiniWizardHTML(index)}`;
+    container.appendChild(div);
+    toggleWizards(); updatePromptsFromWizard();
+}
+
+function updateTrackLabels() {
+    const blocks = document.getElementById('promptsContainer').children;
+    for(let i = 0; i < blocks.length; i++) { blocks[i].querySelector('.track-label').innerText = 'Pista ' + (i+1); }
+}
+
+async function submitJob() {
+    const title = document.getElementById('title').value;
+    const artist = document.getElementById('artist').value;
+    const model = document.getElementById('model').value;
+    const coverPath = document.getElementById('currentCoverPath').value;
+    if(!title) return alert("Falta el títol");
+    const btn = document.getElementById('submitBtn'); btn.disabled = true;
+    try {
+        if(!isAlbumMode) {
+            const prompt = document.querySelector('.prompt-input').value;
+            const dur = document.querySelector('.track-duration').value;
+            await fetch('/api/generate/single', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ title, artist, model, prompt, duration: dur, cover_path: coverPath }) });
+        } else {
+            const tracks = [];
+            const blocks = document.getElementById('promptsContainer').children;
+            for(let i=0; i<blocks.length; i++) {
+                tracks.push({ title: blocks[i].querySelector('.track-title').value || ('Pista ' + (i+1)), prompt: blocks[i].querySelector('.prompt-input').value, duration: blocks[i].querySelector('.track-duration').value });
+            }
+            await fetch('/api/generate/album', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ album_title: title, artist, model, tracks, cover_path: coverPath }) });
+        }
+        alert("Afegit a la cua correctament!"); pollQueue();
+    } catch (e) { alert("Error: " + e); } finally { btn.disabled = false; }
+}
+
+let lastQueueIds = [];
+async function pollQueue() {
+    const spinner = document.getElementById('queueSpinner'); spinner.classList.remove('d-none');
+    try {
+        const res = await fetch('/api/status'); const data = await res.json();
+        const list = document.getElementById('queueList'); list.innerHTML = '';
+        if(data.queue.length === 0) { list.innerHTML = '<li class="list-group-item text-center text-muted p-5 bg-transparent border-0"><i class="bi bi-check-circle text-success fs-1 d-block mb-2"></i> Cua buida. Llest!</li>'; } else {
+            data.queue.forEach(t => {
+                const badge = t.status === 'generating' ? '<span class="badge bg-warning text-dark"><div class="spinner-border spinner-border-sm me-1"></div>Generant</span>' : '<span class="badge bg-secondary">Pendent</span>';
+                const coverImg = t.cover_path ? `<img src="${t.cover_path}" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">` : `<div class="rounded me-3 bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 50px; height: 50px;"><i class="bi bi-music-note"></i></div>`;
+                list.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center bg-transparent"><div class="d-flex align-items-center w-100">${coverImg}<div style="flex-grow:1;"><strong>${t.title}</strong><br><small class="text-muted">${t.prompt.substring(0,40)}...</small></div><div class="ms-2">${badge}</div></div></li>`;
+            });
+        }
+        const currentIds = data.queue.map(q => q.id);
+        if(lastQueueIds.length > 0 && currentIds.length < lastQueueIds.length) { playDing(); }
+        lastQueueIds = currentIds; if(currentIds.length > 0) { setTimeout(pollQueue, 3000); }
+    } finally { spinner.classList.add('d-none'); }
+}
+
+async function loadLibrary() {
+    const res = await fetch('/api/library'); const data = await res.json();
+    const cont = document.getElementById('libraryContainer'); let html = '';
+    data.albums.forEach(a => {
+        const coverHTML = a.cover_path ? `<img src="${a.cover_path}" class="rounded me-3 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">` : `<div class="rounded me-3 bg-secondary shadow-sm d-flex align-items-center justify-content-center text-white" style="width: 80px; height: 80px;"><i class="bi bi-disc fs-1"></i></div>`;
+        html += `<div class="card mb-4 shadow-sm border-0"><div class="card-header bg-dark text-white d-flex justify-content-between align-items-center"><div class="d-flex align-items-center">${coverHTML}<h5 class="mb-0 ms-2">${a.title}</h5></div><button class="btn btn-sm btn-outline-danger" onclick="deleteAlbum('${a.id}')" title="Esborrar àlbum"><i class="bi bi-trash3"></i></button></div><ul class="list-group list-group-flush">`;
+        a.tracks.forEach(t => {
+            const btns = t.status === 'done' ? `<a href="/api/export/mp3/${t.id}" class="btn btn-sm btn-outline-primary" title="Descarregar MP3"><i class="bi bi-file-earmark-music"></i> MP3</a>${(a.cover_path || t.cover_path) ? `<a href="/api/export/mp4/${t.id}" class="btn btn-sm btn-outline-success" title="Generar Vídeo MP4"><i class="bi bi-camera-video"></i> MP4</a>` : ''}` : '';
+            const statusHtml = t.filepath ? `<audio controls src="${t.filepath}" class="mt-2 w-100" style="height: 35px;"></audio>` : (t.status === 'error' ? `<span class="badge bg-danger mt-2">error</span><div class="text-danger small mt-1" style="white-space: pre-wrap; font-family: monospace; background: #fee; padding: 5px; border-radius: 4px; max-height: 100px; overflow-y: auto;">${t.error_msg || "Sense detalls de l'error"}</div>` : `<span class="badge bg-warning mt-2">${t.status}</span>`);
+            html += `<li class="list-group-item d-flex justify-content-between align-items-center bg-white"><div class="w-100 me-3"><strong class="text-primary">${t.track_order}. ${t.title}</strong> - <small class="text-muted">${t.artist}</small><br>${statusHtml}</div><div class="d-flex gap-2 align-items-center">${btns}<button class="btn btn-sm btn-outline-danger" onclick="deleteTrack('${t.id}')"><i class="bi bi-x-lg"></i></button></div></li>`;
+        }); html += `</ul></div>`;
+    });
+    if(data.singles.length > 0) {
+        html += `<div class="card mb-4 shadow-sm border-0"><div class="card-header bg-secondary text-white"><h5><i class="bi bi-music-note-list"></i> Singles</h5></div><ul class="list-group list-group-flush">`;
+        data.singles.forEach(t => {
+            const coverHTML = t.cover_path ? `<img src="${t.cover_path}" class="rounded me-3 shadow-sm" style="width: 60px; height: 60px; object-fit: cover;">` : '';
+            const btns = t.status === 'done' ? `<a href="/api/export/mp3/${t.id}" class="btn btn-sm btn-outline-primary" title="Descarregar MP3"><i class="bi bi-file-earmark-music"></i> MP3</a>${t.cover_path ? `<a href="/api/export/mp4/${t.id}" class="btn btn-sm btn-outline-success" title="Generar Vídeo MP4"><i class="bi bi-camera-video"></i> MP4</a>` : ''}` : '';
+            const statusHtml = t.filepath ? `<audio controls src="${t.filepath}" class="mt-2 w-100" style="height: 35px;"></audio>` : (t.status === 'error' ? `<span class="badge bg-danger mt-2">error</span><div class="text-danger small mt-1" style="white-space: pre-wrap; font-family: monospace; background: #fee; padding: 5px; border-radius: 4px; max-height: 100px; overflow-y: auto;">${t.error_msg || "Sense detalls de l'error"}</div>` : `<span class="badge bg-warning mt-2">${t.status}</span>`);
+            html += `<li class="list-group-item d-flex justify-content-between align-items-center bg-white"><div class="d-flex align-items-center w-100 me-3">${coverHTML}<div style="flex-grow:1;"><strong class="text-primary">${t.title}</strong> - <small class="text-muted">${t.artist}</small><br>${statusHtml}</div></div><div class="d-flex gap-2 align-items-center">${btns}<button class="btn btn-sm btn-outline-danger" onclick="deleteTrack('${t.id}')"><i class="bi bi-x-lg"></i></button></div></li>`;
+        }); html += `</ul></div>`;
+    }
+    document.getElementById('libraryContainer').innerHTML = html || '<div class="text-center p-5 text-muted"><i class="bi bi-inbox fs-1 d-block mb-3"></i>Sense música encara.</div>';
+}
+
+async function deleteTrack(id) { if(confirm("Borrar pista?")) { await fetch(`/api/tracks/${id}`, {method: 'DELETE'}); loadLibrary(); } }
+async function deleteAlbum(id) { if(confirm("Borrar àlbum SENCER i els seus arxius?")) { await fetch(`/api/albums/${id}`, {method: 'DELETE'}); loadLibrary(); } }
+
+window.onload = () => {
+    initWizard();
+    pollQueue();
+    loadComfyModels();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  musicgen:
+    build: .
+    container_name: musicgen_local
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - DATABASE_PATH=/app_data/musicgen.db
+    volumes:
+      - ./model_cache:/root/.cache/huggingface
+      - ./:/app
+      - db_data:/app_data
+
+volumes:
+  db_data:
+    external: true
+

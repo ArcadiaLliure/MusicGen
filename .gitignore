@@ -1,0 +1,11 @@
+ComfyUI/
+comfyui_data/
+ComfyUI_test/
+instance/
+model_cache/
+static/
+venv/
+__pycache__/
+*.db
+*.sqlite3
+.env
