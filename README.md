@@ -36,8 +36,8 @@ Aquest projecte no seria possible sense la feina pionera de la comunitat Open So
 - **[Hugging Face](https://huggingface.co/):** Per proporcionar la infraestructura gratuÃ¯ta per a descarregar els pesos dels models de manera Ã gil.
 - **ArcÃ dia Lliure (Manel & AI):** Desenvolupament de l'arquitectura del servidor (Flask/SQLite), el sistema de cues, la persistÃ¨ncia de metadades i el disseny complet del portal d'usuari Front-End (SPA).
 
-## Llicència i Propietat
+## ğŸ“„ LlicÃ¨ncia i Propietat
 
-Aquest producte i la seva integració web (excloent els models base de Meta/Audiocraft) són propietat de **Arcàdia Lliure**.
+Aquest producte i la seva integraciÃ³ web (excloent els models base de Meta/Audiocraft) sÃ³n propietat d'**ArcÃ dia Lliure**.
 
-© 2026 Arcàdia Lliure. Tots els drets reservats.
+Â© 2026 ArcÃ dia Lliure. Tots els drets reservats.
