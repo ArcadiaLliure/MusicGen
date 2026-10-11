@@ -1,0 +1,84 @@
+/* ==========================================================================
+   Arcàdia Lliure Studio — tokens de disseny
+   Font única de veritat per a colors, tipografia, espai, radis, ombres i moviment.
+   Cap component no ha d'usar valors visuals literals: només aquestes variables.
+   Paleta: pedra càlida, grafit suau i blau petroli desaturat. Mai blanc nuclear
+   ni negre pissarra.
+   ========================================================================== */
+:root {
+  /* Superfícies */
+  --c-bg: #E8E2D6;               /* fons principal: pedra clara */
+  --c-surface: #F1ECE2;          /* superfície base */
+  --c-surface-raised: #F7F3EB;   /* superfície elevada (cards) */
+  --c-panel: #DCD4C4;            /* panells i zones de contingut */
+  --c-inset: #E2DBCD;            /* camp encastat (waveform, inputs) */
+  --c-border: #C6BCAA;
+  --c-border-strong: #A99F8D;
+
+  /* Text */
+  --c-text: #2B2A26;             /* grafit càlid */
+  --c-text-2: #6A6459;
+  --c-text-disabled: #A8A092;
+
+  /* Accent: blau petroli desaturat */
+  --c-accent: #1F5B62;
+  --c-accent-hover: #194A50;
+  --c-accent-active: #133A3F;
+  --c-accent-soft: rgba(31, 91, 98, 0.12);
+  --c-accent-strong: rgba(31, 91, 98, 0.28);
+  --c-focus: #3F8E97;
+  --c-selection: rgba(31, 91, 98, 0.22);
+
+  /* Ambre contingut: reproducció i punts d'atenció suaus */
+  --c-amber: #C08A3E;
+  --c-amber-soft: rgba(192, 138, 62, 0.18);
+
+  /* Estats */
+  --c-success: #4D7A4B;          /* verd mineral */
+  --c-warning: #A8741F;
+  --c-error: #9C4333;
+  --c-disabled: #B8B1A4;
+
+  /* Tipografia */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.85rem;
+  --fs-md: 0.95rem;
+  --fs-lg: 1.1rem;
+  --fs-xl: 1.5rem;
+  --fs-display: 2.1rem;
+
+  /* Espai (escala de 4px) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+
+  /* Radis */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  /* Elevacions: ombres multicapa amb una llum superior subtil */
+  --elev-1: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 1px 2px rgba(43, 42, 38, 0.08);
+  --elev-2: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 4px 10px rgba(43, 42, 38, 0.08), 0 14px 28px rgba(43, 42, 38, 0.07);
+  --elev-3: 0 2px 4px rgba(43, 42, 38, 0.10), 0 18px 44px rgba(43, 42, 38, 0.18);
+  --ring-focus: 0 0 0 3px rgba(63, 142, 151, 0.35);
+
+  /* Mides de controls */
+  --ctl-h: 40px;
+  --ctl-h-sm: 32px;
+  --ctl-h-lg: 48px;
+  --icon-size: 20px;
+
+  /* Moviment */
+  --t-fast: 150ms ease;
+  --t-base: 240ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-slow: 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}

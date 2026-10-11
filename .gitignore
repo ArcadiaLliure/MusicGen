@@ -1,11 +1,24 @@
+# Dades generades per l'aplicació (no versionar)
 ComfyUI/
 comfyui_data/
 ComfyUI_test/
 instance/
 model_cache/
-static/
 venv/
 __pycache__/
 *.db
 *.sqlite3
 .env
+
+# Àudio, vídeo, descàrregues i temporals generats en executar l'app
+static/library/
+static/covers/
+static/inspirations/
+static/exports/
+static/tmp/
+static/outputs/
+
+# Scripts temporals i parxes
+patch*.py
+*.patch
+

@@ -1,0 +1,8 @@
+audiocraft
+gradio
+flask
+flask-sqlalchemy
+mutagen
+transformers==4.38.2
+yt-dlp
+requests

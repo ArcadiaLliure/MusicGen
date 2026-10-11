@@ -1,4 +1,4 @@
-# 🎵 MusicGen Studio (Arcàdia Lliure)
+# 🎵 Arcàdia Lliure Studio
 
 Un portal web avançat i complet per a la generació musical amb Intel·ligència Artificial, dissenyat per executar-se en local mitjançant Docker. Utilitza els potents models de **MusicGen** per transformar descripcions de text en pistes d'àudio d'alta qualitat.
 
