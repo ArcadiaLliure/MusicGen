@@ -1957,8 +1957,12 @@ def start_comfyui():
 # --- ACE-STEP 1.5 STARTUP ---
 def start_acestep():
     """Arrenca el servidor REST d'ACE-Step 1.5 en segon pla al port 8001 si és disponible."""
-    acestep_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "acestep_service")
-    if not os.path.exists(acestep_dir):
+    candidate_dirs = [
+        "/opt/acestep_service",
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "acestep_service"),
+    ]
+    acestep_dir = next((d for d in candidate_dirs if os.path.exists(d)), None)
+    if not acestep_dir:
         return
 
     candidate_pythons = [

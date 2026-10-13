@@ -26,6 +26,9 @@ RUN uv pip install --python /opt/acestep_env \
 RUN uv pip install --python /opt/acestep_env \
         fastapi "uvicorn[standard]" diffusers "transformers>=4.51.0,<4.58.0" soundfile loguru einops accelerate numba modelscope toml diskcache python-multipart vector-quantize-pytorch safetensors requests peft scipy matplotlib
 
+# Clonar el servicio oficial de ACE-Step 1.5 (MIT) en /opt/acestep_service
+RUN git clone --depth 1 https://github.com/ace-step/ACE-Step-1.5.git /opt/acestep_service
+
 COPY app.py /app/app.py
 
 EXPOSE 8000 8001 8188
