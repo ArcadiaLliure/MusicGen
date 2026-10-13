@@ -59,10 +59,21 @@
                             <div>
                                 <label class="label" for="model">Model d'IA musical</label>
                                 <select id="model" class="field">
-                                    <option value="facebook/musicgen-small">MusicGen Small (Ràpid, 300M)</option>
-                                    <option value="facebook/musicgen-medium">MusicGen Medium (1.5B)</option>
-                                    <option value="facebook/musicgen-large">MusicGen Large (3.3B)</option>
-                                    <option value="facebook/musicgen-melody" selected>MusicGen Melody (Àlbum i inspiracions, 1.5B)</option>
+                                    <optgroup label="YuE2 (Linux Docker CUDA - Composició Simbòlica i Veu)">
+                                        <option value="yue2-3b-q4">YuE2 3B Q4 (Quantitzat 12GB - Melodia, harmonia i veu)</option>
+                                        <option value="yue2-3b-q8">YuE2 3B Q8 (Alta fidelitat quantitzada, 12GB)</option>
+                                        <option value="yue2-studio">YuE2 Studio (Compatibilitat general)</option>
+                                    </optgroup>
+                                    <optgroup label="ACE-Step 1.5 (Vocal i Orquestal)">
+                                        <option value="acestep-v15-turbo" selected>ACE-Step 1.5 Turbo (Ràpid, veus i música completa)</option>
+                                        <option value="acestep-v15-sft">ACE-Step 1.5 SFT (Alta fidelitat acústica i vocal)</option>
+                                    </optgroup>
+                                    <optgroup label="Meta MusicGen">
+                                        <option value="facebook/musicgen-melody">MusicGen Melody (Àlbum i inspiracions, 1.5B)</option>
+                                        <option value="facebook/musicgen-medium">MusicGen Medium (1.5B)</option>
+                                        <option value="facebook/musicgen-small">MusicGen Small (Ràpid, 300M)</option>
+                                        <option value="facebook/musicgen-large">MusicGen Large (3.3B)</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -168,16 +179,33 @@
                     </div>
 
                     <section class="instruments">
-                        <div class="inline-between wrap">
-                            <span class="label">Wizard d'instruments</span>
+                        <div class="inline-between wrap" style="gap: var(--s-3); align-items: flex-end; margin-bottom: var(--s-3);">
+                            <div class="style-filter-box" style="flex: 1; min-width: 200px;">
+                                <label class="label" for="styleSelect">Seleccionar estil</label>
+                                <select id="styleSelect" class="field field-sm" style="width: 100%; max-width: 320px;"></select>
+                            </div>
                             <div class="legend">
                                 <span class="badge badge-success">Obligatori</span>
                                 <span class="badge badge-accent">Opcional</span>
                                 <span class="badge badge-error">Prohibit</span>
                             </div>
                         </div>
+                        <div id="activeFilteredOutContainer" class="active-filtered-box" hidden>
+                            <span class="muted small" style="display: block; margin-bottom: 6px;">Instruments actius d'altres estils:</span>
+                            <div id="activeFilteredChipsList" class="chips-list"></div>
+                        </div>
                         <div class="wizard-grid" id="instrumentGrid"></div>
                     </section>
+
+                    <div id="lyricsContainer" class="lyrics-card" hidden>
+                        <div class="inline-between" style="margin-bottom: var(--s-2);">
+                            <label class="label" for="lyricsInput" style="margin: 0; font-weight: 600; color: var(--c-accent-light, #d2691e);">
+                                🎤 Lletra de la cançó (Mode Vocal ACE-Step 1.5)
+                            </label>
+                            <span class="muted small">Escriu estrofes o indicacions (ex: [Verse], [Chorus], [Outro])</span>
+                        </div>
+                        <textarea id="lyricsInput" class="field" rows="4" placeholder="Escriu aquí la lletra de la cançó en català, llatí, castellà o anglès (ex: [Verse] Primera estrofa... [Chorus] Tornada...)..."></textarea>
+                    </div>
 
                     <section>
                         <h3 class="section-title-sm" id="tracksTitle">Pista</h3>
@@ -246,6 +274,7 @@
     <button class="icon-btn" id="btnClosePlayer" title="Tancar reproductor"><span data-icon="close"></span></button>
 </div>
 
-<script src="/static/ui/app.js?v=1791681600"></script>
+<script src="/static/ui/catalog.js?v=20261012_03"></script>
+<script src="/static/ui/app.js?v=20261012_03"></script>
 </body>
 </html>

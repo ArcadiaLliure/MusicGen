@@ -97,31 +97,42 @@ function hydrateIcons(root = document) {
 // ===================== Utilitats =====================
 const $ = (id) => document.getElementById(id);
 const MAX_GEN_SECONDS = 30;
-const INSTRUMENTS = [
-  { id: "Piano", icon: "mdi:piano", color: "black", style: "" },
-  { id: "Clavicord", icon: "mdi:piano", color: "%238B4513", style: "transform: scaleX(-1);" },
-  { id: "Synth", icon: "game-icons:piano-keys", color: "%239400D3", style: "" },
-  { id: "Acoustic Guitar", icon: "mdi:guitar-acoustic", color: "%23D2691E", style: "" },
-  { id: "Spanish Guitar", icon: "mdi:guitar-acoustic", color: "%238B0000", style: "transform: rotate(15deg);" },
-  { id: "Elec Guitar", icon: "mdi:guitar-electric", color: "%231E90FF", style: "" },
-  { id: "Bass", icon: "mdi:guitar-electric", color: "%2332CD32", style: "transform: scale(1.1) rotate(-10deg);" },
-  { id: "Ukulele", icon: "qlementine-icons:ukulele-24", color: "%23DEB887", style: "" },
-  { id: "Harp", icon: "game-icons:harp", color: "%23DAA520", style: "" },
-  { id: "Contrabass", icon: "qlementine-icons:cello-24", color: "%235C4033", style: "transform: scale(1.3);" },
-  { id: "Cello", icon: "qlementine-icons:cello-24", color: "%238B4513", style: "" },
-  { id: "Violin", icon: "mdi:violin", color: "%23A0522D", style: "" },
-  { id: "Flute", icon: "game-icons:flute", color: "%23708090", style: "" },
-  { id: "Clarinet", icon: "game-icons:clarinet", color: "black", style: "" },
-  { id: "Oboe", icon: "game-icons:clarinet", color: "%232F4F4F", style: "transform: scaleY(-1);" },
-  { id: "Fagot", icon: "game-icons:bassoon", color: "%238B4513", style: "" },
-  { id: "Gralla", icon: "game-icons:clarinet", color: "%23CD853F", style: "" },
-  { id: "Saxophone", icon: "mdi:saxophone", color: "%23DAA520", style: "" },
-  { id: "Trumpet", icon: "mdi:trumpet", color: "%23FFA500", style: "" },
-  { id: "Trombone", icon: "game-icons:trombone", color: "%23DAA520", style: "" },
-  { id: "Harmonica", icon: "qlementine-icons:harmonica-16", color: "%234682B4", style: "transform: scale(1.3);" },
-  { id: "Drums", icon: "lucide:drum", color: "%23FF4500", style: "" },
-  { id: "Choir", icon: "lucide:mic", color: "black", style: "" },
-];
+const INSTRUMENTS = (typeof window !== 'undefined' && Array.isArray(window.CATALOG_INSTRUMENTS) && window.CATALOG_INSTRUMENTS.length)
+  ? window.CATALOG_INSTRUMENTS
+  : (typeof CATALOG_INSTRUMENTS !== 'undefined' && Array.isArray(CATALOG_INSTRUMENTS) && CATALOG_INSTRUMENTS.length)
+    ? CATALOG_INSTRUMENTS
+    : [
+      { id: "Piano", name: "Piano", icon: "mdi:piano", color: "black", style: "", styles: ["all"], promptDesc: "acoustic grand piano" },
+      { id: "Clavicord", name: "Clavicordi", icon: "mdi:piano", color: "%238B4513", style: "transform: scaleX(-1);", styles: ["all"], promptDesc: "clavichord" },
+      { id: "Synth", name: "Sintetitzador", icon: "game-icons:piano-keys", color: "%239400D3", style: "", styles: ["all"], promptDesc: "synthesizer" },
+      { id: "Acoustic Guitar", name: "Guitarra acústica", icon: "mdi:guitar-acoustic", color: "%23D2691E", style: "", styles: ["all"], promptDesc: "acoustic guitar" },
+      { id: "Spanish Guitar", name: "Guitarra espanyola", icon: "mdi:guitar-acoustic", color: "%238B0000", style: "transform: rotate(15deg);", styles: ["all"], promptDesc: "Spanish guitar" },
+      { id: "Elec Guitar", name: "Guitarra elèctrica", icon: "mdi:guitar-electric", color: "%231E90FF", style: "", styles: ["all"], promptDesc: "electric guitar" },
+      { id: "Bass", name: "Baix elèctric", icon: "mdi:guitar-electric", color: "%2332CD32", style: "transform: scale(1.1) rotate(-10deg);", styles: ["all"], promptDesc: "bass guitar" },
+      { id: "Ukulele", name: "Ukelele", icon: "qlementine-icons:ukulele-24", color: "%23DEB887", style: "", styles: ["all"], promptDesc: "ukulele" },
+      { id: "Harp", name: "Arpa", icon: "game-icons:harp", color: "%23DAA520", style: "", styles: ["all"], promptDesc: "harp" },
+      { id: "Contrabass", name: "Contrabaix", icon: "qlementine-icons:cello-24", color: "%235C4033", style: "transform: scale(1.3);", styles: ["all"], promptDesc: "contrabass" },
+      { id: "Cello", name: "Violoncel", icon: "qlementine-icons:cello-24", color: "%238B4513", style: "", styles: ["all"], promptDesc: "cello" },
+      { id: "Violin", name: "Violí", icon: "mdi:violin", color: "%23A0522D", style: "", styles: ["all"], promptDesc: "violin" },
+      { id: "Flute", name: "Flauta travessera", icon: "game-icons:flute", color: "%23708090", style: "", styles: ["all"], promptDesc: "flute" },
+      { id: "Clarinet", name: "Clarinet", icon: "game-icons:clarinet", color: "black", style: "", styles: ["all"], promptDesc: "clarinet" },
+      { id: "Oboe", name: "Oboè", icon: "game-icons:clarinet", color: "%232F4F4F", style: "transform: scaleY(-1);", styles: ["all"], promptDesc: "oboe" },
+      { id: "Fagot", name: "Fagot", icon: "game-icons:bassoon", color: "%238B4513", style: "", styles: ["all"], promptDesc: "bassoon" },
+      { id: "Gralla", name: "Gralla", icon: "game-icons:clarinet", color: "%23CD853F", style: "", styles: ["all"], promptDesc: "gralla" },
+      { id: "Saxophone", name: "Saxòfon", icon: "mdi:saxophone", color: "%23DAA520", style: "", styles: ["all"], promptDesc: "saxophone" },
+      { id: "Trumpet", name: "Trompeta", icon: "mdi:trumpet", color: "%23FFA500", style: "", styles: ["all"], promptDesc: "trumpet" },
+      { id: "Trombone", name: "Trombó", icon: "game-icons:trombone", color: "%23DAA520", style: "", styles: ["all"], promptDesc: "trombone" },
+      { id: "Harmonica", name: "Harmònica", icon: "qlementine-icons:harmonica-16", color: "%234682B4", style: "transform: scale(1.3);", styles: ["all"], promptDesc: "harmonica" },
+      { id: "Drums", name: "Bateria", icon: "lucide:drum", color: "%23FF4500", style: "", styles: ["all"], promptDesc: "drums" },
+      { id: "Choir", name: "Cor mixt", icon: "lucide:mic", color: "black", style: "", styles: ["all"], promptDesc: "choir" },
+      { id: "Voice", name: "Voz (Veu)", icon: "mdi:microphone", color: "%23FF1493", style: "", styles: ["all"], promptDesc: "lead vocals" }
+    ];
+
+const APP_STYLES = (typeof window !== 'undefined' && Array.isArray(window.STYLES) && window.STYLES.length)
+  ? window.STYLES
+  : (typeof STYLES !== 'undefined' && Array.isArray(STYLES) && STYLES.length)
+    ? STYLES
+    : [{ id: "all", name: "Tots els instruments", desc: "" }];
 
 const ui = {
   albumOn: false,
@@ -133,6 +144,8 @@ const ui = {
   collapsed: new Set(),
   editor: null,
   lastQueueIds: [],
+  currentStyle: 'all',
+  cachedLyrics: '',
 };
 const globalStates = {};
 INSTRUMENTS.forEach(i => { globalStates[i.id] = 0; });
@@ -186,7 +199,13 @@ function showOverlay(html, cls = '') {
   return card;
 }
 
+let overlayCloseHook = null;
+
 function closeOverlay() {
+  if (typeof overlayCloseHook === 'function') {
+    try { overlayCloseHook(); } catch (e) {}
+    overlayCloseHook = null;
+  }
   $('overlay').classList.remove('open');
   $('overlayCard').innerHTML = '';
 }
@@ -249,21 +268,138 @@ function prefixFromStates(states) {
 
 function instrumentButton(inst, state, mini) {
   const size = mini ? 'mini' : '';
-  return `<button type="button" class="inst-btn inst-state-${state} ${size}" data-inst="${esc(inst.id)}" title="${esc(inst.id)}">
-      <img src="https://api.iconify.design/${inst.icon}.svg?color=${inst.color}" alt="" style="${inst.style}">
-      <span class="inst-name">${esc(inst.id)}</span></button>`;
+  const displayName = inst.name || inst.id;
+  const iconSrc = (inst.icon && inst.icon.includes(':'))
+    ? `https://api.iconify.design/${inst.icon}.svg?color=${inst.color || 'currentColor'}`
+    : (inst.icon || '');
+  return `<button type="button" class="inst-btn inst-state-${state} ${size}" data-inst="${esc(inst.id)}" title="${esc(displayName)} (${esc(inst.id)})">
+      <img src="${iconSrc}" alt="" loading="lazy" style="${inst.style || ''}" onerror="this.style.opacity='0'">
+      <span class="inst-name">${esc(displayName)}</span></button>`;
 }
 
 function renderWizard(container, states, onChange, mini = false) {
-  container.innerHTML = INSTRUMENTS.map(inst => instrumentButton(inst, states[inst.id] || 0, mini)).join('');
+  const isGlobalGrid = container.id === 'instrumentGrid';
+  const filterStyle = (ui.currentStyle && ui.currentStyle !== 'all') ? ui.currentStyle : null;
+  const visibleInstruments = filterStyle
+    ? INSTRUMENTS.filter(i => Array.isArray(i.styles) && i.styles.includes(filterStyle))
+    : INSTRUMENTS;
+
+  if (!visibleInstruments.length) {
+    container.innerHTML = `<div class="muted small" style="grid-column: 1 / -1; padding: 12px; text-align: center;">Cap instrument en aquest estil</div>`;
+    return;
+  }
+
+  container.innerHTML = visibleInstruments.map(inst => instrumentButton(inst, states[inst.id] || 0, mini)).join('');
   container.querySelectorAll('.inst-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.inst;
       states[id] = ((states[id] || 0) + 1) % 4;
       btn.className = `inst-btn inst-state-${states[id]} ${mini ? 'mini' : ''}`;
       if (onChange) onChange();
+      if (isGlobalGrid) {
+        onGlobalStateChange();
+      }
     });
   });
+}
+
+function onGlobalStateChange() {
+  renderActiveFilteredChips();
+  updateLyricsVisibility();
+}
+
+function initStyleSelector() {
+  const sel = $('styleSelect');
+  if (!sel) return;
+  sel.innerHTML = APP_STYLES.map(s => {
+    let countStr = '';
+    if (s.id === 'all') {
+      countStr = ` (${INSTRUMENTS.length})`;
+    } else {
+      const count = INSTRUMENTS.filter(i => Array.isArray(i.styles) && i.styles.includes(s.id)).length;
+      countStr = ` (${count})`;
+    }
+    return `<option value="${esc(s.id)}">${esc(s.name)}${countStr}</option>`;
+  }).join('');
+  sel.value = ui.currentStyle || 'all';
+  sel.addEventListener('change', (e) => {
+    ui.currentStyle = e.target.value;
+    renderWizard($('instrumentGrid'), globalStates, onGlobalStateChange, false);
+    renderActiveFilteredChips();
+    if (ui.albumOn && ui.albumMode === 'manual') {
+      refreshBlocks();
+    }
+  });
+}
+
+function renderActiveFilteredChips() {
+  const box = $('activeFilteredOutContainer');
+  const list = $('activeFilteredChipsList');
+  if (!box || !list) return;
+
+  const current = ui.currentStyle || 'all';
+  if (current === 'all') {
+    box.hidden = true;
+    list.innerHTML = '';
+    return;
+  }
+
+  const activeOutOfFilter = INSTRUMENTS.filter(inst => {
+    const state = globalStates[inst.id] || 0;
+    if (state === 0) return false;
+    const inStyle = Array.isArray(inst.styles) && inst.styles.includes(current);
+    return !inStyle;
+  });
+
+  if (!activeOutOfFilter.length) {
+    box.hidden = true;
+    list.innerHTML = '';
+    return;
+  }
+
+  box.hidden = false;
+  list.innerHTML = activeOutOfFilter.map(inst => {
+    const state = globalStates[inst.id];
+    const stLabel = state === 1 ? 'Obligatori' : (state === 2 ? 'Opcional' : 'Prohibit');
+    return `<span class="active-chip state-${state}">
+      <span>${esc(inst.name || inst.id)} (${stLabel})</span>
+      <button type="button" data-deselect="${esc(inst.id)}" title="Deseleccionar">×</button>
+    </span>`;
+  }).join('');
+
+  list.querySelectorAll('[data-deselect]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.deselect;
+      globalStates[id] = 0;
+      onGlobalStateChange();
+      renderWizard($('instrumentGrid'), globalStates, onGlobalStateChange, false);
+    });
+  });
+}
+
+function updateLyricsVisibility() {
+  const container = $('lyricsContainer');
+  const input = $('lyricsInput');
+  if (!container || !input) return;
+
+  const modelVal = $('model') ? $('model').value : '';
+  const isVocalModel = modelVal.startsWith('acestep') || modelVal.startsWith('yue');
+  const voiceState = globalStates['Voice'] || 0;
+  const isVoiceExplicitlyForbidden = (voiceState === 3);
+
+  const shouldShow = (!isVoiceExplicitlyForbidden && isVocalModel) || (voiceState === 1 || voiceState === 2);
+
+  if (shouldShow) {
+    container.hidden = false;
+    if (ui.cachedLyrics && !input.value) {
+      input.value = ui.cachedLyrics;
+    }
+  } else {
+    if (input.value) {
+      ui.cachedLyrics = input.value;
+    }
+    container.hidden = true;
+  }
 }
 
 // ===================== Caràtula i ComfyUI =====================
@@ -469,6 +605,15 @@ async function submitJob() {
   const globalPrefix = prefixFromStates(globalStates);
   if (!title) return toast(ui.albumOn ? "El nom de l'àlbum és obligatori" : 'Falta el títol de la cançó', 'warning');
 
+  const isVocalModel = (model && (model.startsWith('acestep') || model.startsWith('yue')));
+  const voiceState = globalStates['Voice'] || 0;
+  const isVoiceProhibited = (voiceState === 3);
+  const lyricsAllowed = !isVoiceProhibited && (isVocalModel || voiceState === 1 || voiceState === 2);
+  const activeLyrics = (lyricsAllowed && $('lyricsContainer') && !$('lyricsContainer').hidden && $('lyricsInput'))
+    ? $('lyricsInput').value.trim()
+    : '';
+  const selectedStyle = ui.currentStyle || 'all';
+
   btn.disabled = true;
   try {
     if (!ui.albumOn) {
@@ -479,6 +624,9 @@ async function submitJob() {
         body: {
           title, artist, model, prompt, cover_path: coverPath, inspiration_id: inspirationId,
           duration: parseInt(block.querySelector('.track-duration').value, 10) || 30,
+          style: selectedStyle,
+          lyrics: activeLyrics,
+          instrument_states: globalStates,
         }
       });
     } else if (ui.albumMode === 'auto') {
@@ -490,6 +638,9 @@ async function submitJob() {
           instrument_prefix: globalPrefix,
           track_count: parseInt($('autoCount').value, 10),
           duration: parseInt($('autoDuration').value, 10),
+          style: selectedStyle,
+          lyrics: activeLyrics,
+          instrument_states: globalStates,
         }
       });
     } else {
@@ -502,7 +653,12 @@ async function submitJob() {
       }));
       await api('/api/generate/album', {
         method: 'POST',
-        body: { album_id: ui.targetAlbumId, album_title: title, artist, model, tracks, cover_path: coverPath, inspiration_id: inspirationId }
+        body: {
+          album_id: ui.targetAlbumId, album_title: title, artist, model, tracks, cover_path: coverPath, inspiration_id: inspirationId,
+          style: selectedStyle,
+          lyrics: activeLyrics,
+          instrument_states: globalStates,
+        }
       });
     }
     toast('Afegit a la cua de treball', 'success');
@@ -786,15 +942,19 @@ async function openSelector(importId) {
   const audio = $('selAudio');
 
   const render = () => {
+    const sStart = $('selStart');
+    const sEnd = $('selEnd');
+    const sLen = $('selLen');
+    if (!canvas || !audio || !sStart || !sEnd || !sLen) return;
     drawWave(canvas, data.peaks, {
       duration: data.duration,
       selection: { start: sel.start, end: sel.end },
       handles: true,
       playhead: audio.currentTime,
     });
-    $('selStart').textContent = fmtTime(sel.start);
-    $('selEnd').textContent = fmtTime(sel.end);
-    $('selLen').textContent = `${(sel.end - sel.start).toFixed(1).replace('.', ',')} s`;
+    sStart.textContent = fmtTime(sel.start);
+    sEnd.textContent = fmtTime(sel.end);
+    sLen.textContent = `${(sel.end - sel.start).toFixed(1).replace('.', ',')} s`;
   };
 
   const timeAt = (e) => {
@@ -838,15 +998,23 @@ async function openSelector(importId) {
     }
   };
 
+  const cleanup = () => {
+    window.removeEventListener('resize', render);
+    if (audio) {
+      try { audio.pause(); } catch (e) {}
+    }
+  };
+  overlayCloseHook = cleanup;
+
   $('selDiscard').onclick = async () => {
-    audio.pause();
+    cleanup();
     closeOverlay();
     try { await api(`/api/inspirations/imports/${importId}`, { method: 'DELETE' }); } catch (e) { /* ja descartada */ }
   };
 
   $('selAccept').onclick = async () => {
     try {
-      audio.pause();
+      cleanup();
       const res = await api(`/api/inspirations/imports/${importId}/accept`, {
         method: 'POST', body: { start: sel.start, end: sel.end }
       });
@@ -1532,6 +1700,7 @@ function bindEvents() {
     refreshBlocks();
   updateYTPreview();
   });
+  $('model').addEventListener('change', updateLyricsVisibility);
   $('comfyModelSelect').addEventListener('change', updateDeleteBtn);
   $('btnDeleteModel').addEventListener('click', deleteComfyModel);
   $('btnUploadCover').addEventListener('click', () => $('coverInput').click());
@@ -1655,8 +1824,11 @@ function bindEvents() {
 
 window.addEventListener('DOMContentLoaded', () => {
   hydrateIcons();
-  renderWizard($('instrumentGrid'), globalStates, null, false);
+  initStyleSelector();
+  renderWizard($('instrumentGrid'), globalStates, onGlobalStateChange, false);
   $('instrumentGrid').closest('.instruments').hidden = false;
+  renderActiveFilteredChips();
+  updateLyricsVisibility();
   bindEvents();
   setBlockCount(1);
   $('manualCount').value = 1;

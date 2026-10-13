@@ -6,6 +6,8 @@ services:
     container_name: musicgen_local
     ports:
       - "8000:8000"
+      - "8001:8001"
+      - "8188:8188"
     deploy:
       resources:
         reservations:
@@ -15,10 +17,32 @@ services:
               capabilities: [gpu]
     environment:
       - DATABASE_PATH=/app_data/musicgen.db
+      - ACESTEP_API_URL=http://127.0.0.1:8001
+      - YUE_API_URL=http://yue2:8791
     volumes:
       - ./model_cache:/root/.cache/huggingface
       - ./:/app
       - db_data:/app_data
+    depends_on:
+      - yue2
+
+  yue2:
+    image: ghcr.io/0xshug0/audio.cpp:full-cuda12
+    container_name: yue2_service
+    command: server --config /app/server.json --host 0.0.0.0 --port 8791 --backend cuda --ui --ui-management
+    ports:
+      - "8791:8791"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - ./model_cache/yue2:/app/models
+      - ./config/yue2_server.json:/app/server.json
+      - ./static/library:/app/output
 
 volumes:
   db_data:

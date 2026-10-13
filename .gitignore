@@ -21,4 +21,8 @@ static/outputs/
 # Scripts temporals i parxes
 patch*.py
 *.patch
+compact_docker.bat
+
+# Subprojectes externs clonats (gestió independent / MIT)
+acestep_service/
 

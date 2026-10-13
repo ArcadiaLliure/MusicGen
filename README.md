@@ -32,12 +32,14 @@ Un portal web avançat i complet per a la generació musical amb Intel·ligènci
 
 Aquest projecte no seria possible sense la feina pionera de la comunitat Open Source i d'IA:
 
-- **[Meta AI Research (Audiocraft)](https://github.com/facebookresearch/audiocraft):** Als enginyers i investigadors de Meta per obrir i compartir la tecnologia i els models de *MusicGen*. Són el veritable motor d'aquesta eina.
+- **[Meta AI Research (Audiocraft)](https://github.com/facebookresearch/audiocraft):** Als enginyers i investigadors de Meta per obrir i compartir la tecnologia i els models de *MusicGen* (Llicència MIT / recerca).
+- **[audio.cpp](https://github.com/0xshug0/audio.cpp) / YuE:** A la comunitat de desenvolupadors d'*audio.cpp* per la infraestructura d'inferència C++/CUDA per a models d'àudio i a l'equip de *YuE* per l'arquitectura de generació amb veu i acompanyament.
+- **[ACE-Step 1.5](https://github.com/ace-step/ACE-Step-1.5):** A l'equip d'ACE-Step pel desenvolupament del motor de generació musical i síntesi (Llicència MIT).
 - **[Hugging Face](https://huggingface.co/):** Per proporcionar la infraestructura gratuïta per a descarregar els pesos dels models de manera àgil.
-- **Arcàdia Lliure (Manel & AI):** Desenvolupament de l'arquitectura del servidor (Flask/SQLite), el sistema de cues, la persistència de metadades i el disseny complet del portal d'usuari Front-End (SPA).
+- **Arcàdia Lliure (Manel & AI):** Desenvolupament de l'arquitectura multi-motor, el servidor (Flask/SQLite), el sistema de cues i gestió de VRAM, la persistència de metadades i el disseny complet del portal d'usuari Front-End (SPA).
 
 ## 📄 Llicència i Propietat
 
-Aquest producte i la seva integració web (excloent els models base de Meta/Audiocraft) són propietat d'**Arcàdia Lliure**.
+Aquest producte i la seva integració web (excloent els models base i biblioteques externes) són propietat d'**Arcàdia Lliure**. Els models i components de tercers utilitzats mantenen les seves respectives llicències de codi obert i termes d'ús.
 
 © 2026 Arcàdia Lliure. Tots els drets reservats.
